@@ -7,6 +7,13 @@
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
     "objectID": "2024/index.html",
     "href": "2024/index.html",
     "title": "Advent of Code 2024",
@@ -19,12 +26,5 @@
     "title": "Advent of Code 2024",
     "section": "",
     "text": "# Read the file into an array of lines\nlines = readlines(\"data/day_1.txt\")\nsplit_lines = [parse.(Int, split(line)) for line in lines]\n\ncol1 = [x[1] for x in split_lines]\ncol2 = [x[2] for x in split_lines]\n\nsort!(col1)\nsort!(col2)\n\ntotal = 0\nfor i in 1:length(col1)\n    total += abs(col1[i] - col2[i])\nend\n\nprint(\"Total distance of all coordinates: \" * string(total))\n\nTotal distance of all coordinates: 1830467"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
   }
 ]
