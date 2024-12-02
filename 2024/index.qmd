@@ -1,5 +1,6 @@
 ---
-title: 2024 (This time w/ Julia)
+title: Advent of Code 2024
+subtitle: This time with Julia
 author: Brady Johnston
 engine: julia
 ---
@@ -7,7 +8,7 @@ engine: julia
 ## [Day 1](https://adventofcode.com/2024/day/1)
 ```{julia}
 # Read the file into an array of lines
-lines = readlines("2024/data/day_1.txt")
+lines = readlines("data/day_1.txt")
 split_lines = [parse.(Int, split(line)) for line in lines]
 
 col1 = [x[1] for x in split_lines]
