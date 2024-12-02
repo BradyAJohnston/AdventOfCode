@@ -1,0 +1,25 @@
+---
+title: 2024 (This time w/ Julia)
+author: Brady Johnston
+engine: julia
+---
+
+## [Day 1](https://adventofcode.com/2024/day/1)
+```{julia}
+# Read the file into an array of lines
+lines = readlines("2024/data/day_1.txt")
+split_lines = [parse.(Int, split(line)) for line in lines]
+
+col1 = [x[1] for x in split_lines]
+col2 = [x[2] for x in split_lines]
+
+sort!(col1)
+sort!(col2)
+
+total = 0
+for i in 1:length(col1)
+    total += abs(col1[i] - col2[i])
+end
+
+print("Total distance of all coordinates: " * string(total))
+```

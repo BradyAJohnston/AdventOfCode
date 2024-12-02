@@ -1,0 +1,12 @@
+{
+  "hash": "1848f70d68cad78db3f7eeab2ad7fd44",
+  "result": {
+    "engine": "julia",
+    "markdown": "---\ntitle: 2024 (This time w/ Julia)\nauthor: Brady Johnston\nengine: julia\n---\n\n\n\n\n## [Day 1](https://adventofcode.com/2024/day/1)\n\n\n\n::: {#2 .cell execution_count=1}\n``` {.julia .cell-code}\n# Read the file into an array of lines\nlines = readlines(\"data/day_1.txt\")\nsplit_lines = [parse.(Int, split(line)) for line in lines]\n\ncol1 = [x[1] for x in split_lines]\ncol2 = [x[2] for x in split_lines]\n\nsort!(col1)\nsort!(col2)\n\ntotal = 0\nfor (i, test) in enumerate(col1)\n    total += abs(col1[i] - col2[i])\nend\n\nprint(\"Total distance of all coordinates: \" * string(total))\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nTotal distance of all coordinates: 1830467\n```\n:::\n:::\n\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
