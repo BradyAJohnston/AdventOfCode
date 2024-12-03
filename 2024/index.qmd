@@ -90,7 +90,7 @@ example_parsed
 @assert sum(example_parsed) == sum(example_numbers)
 
 
-lines = readlines("2024/data/day_3.txt")
+lines = readlines("data/day_3.txt")
 extracted_values = [mulstring_to_int.(x) for x in extract_mulstrings.(lines)]
 
 total = sum(sum.(extracted_values))
