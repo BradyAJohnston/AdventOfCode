@@ -33,5 +33,12 @@
     "title": "Advent of Code 2024",
     "section": "Day 2",
     "text": "Day 2\n\n\nfunction check_report_safe(report::Vector{Int})\n    change = diff(report)\n    is_size_safe = Base.between.(abs.(change), 1, 3)\n    is_dir_safe = diff(sign.(change)) .== 0\n    return all(is_dir_safe) & all(is_size_safe)\nend\n\nexamples = [\n    [7, 6, 4, 2, 1], \n    [1, 2, 7, 8, 9], \n    [9, 7, 6, 2, 1], \n    [1, 3, 2, 4, 5], \n    [8, 6, 4, 4, 1], \n    [1, 3, 6, 7, 9]\n]\n\nanswers = [true, false, false, false, false, true]\n\n\n@assert check_report_safe.(examples) == answers\n\n\nlines = readlines(\"data/day_2.txt\")\nsplit_lines = [parse.(Int, split(line)) for line in lines]\n\nis_report_safe = check_report_safe.(split_lines)\nn_safe = sum(is_report_safe)\n\nprint(\"Total safe reports: $n_safe\")\n\n\nTotal safe reports: 369"
+  },
+  {
+    "objectID": "2024/index.html#day-3",
+    "href": "2024/index.html#day-3",
+    "title": "Advent of Code 2024",
+    "section": "Day 3",
+    "text": "Day 3\n\n\nexample = \"xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))\"\nexample_numbers = [8, 25, 88, 40]\n\n\nfunction mulstring_to_int(mulstring)\n    return prod([parse(Int, x.match) for x in eachmatch(r\"\\d+\", mulstring)])\nend\n\nfunction extract_mulstrings(line)\n    return [m.match for m in eachmatch(r\"mul\\(\\d+,\\d+\\)\", line)]\nend\n\n@assert mulstring_to_int(\"mul(11,8)\") == 88\n@assert mulstring_to_int(\"mul(8,5)\") == 40\n\nexample_parsed = mulstring_to_int.(extract_mulstrings(example))\n@assert example_parsed == example_numbers\n\n\nlines = readlines(\"data/day_3.txt\")\nextracted_values = [mulstring_to_int.(x) for x in extract_mulstrings.(lines)]\n\ntotal = sum(sum.(extracted_values))\n\nprint(\"Total sum of all mul calls: $total\")\n\nTotal sum of all mul calls: 185797128"
   }
 ]
