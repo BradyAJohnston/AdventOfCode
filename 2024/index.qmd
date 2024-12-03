@@ -79,15 +79,11 @@ function extract_mulstrings(line)
     return [m.match for m in eachmatch(r"mul\(\d+,\d+\)", line)]
 end
 
-@assert mulstring_to_int("mul(10,3)") == 30
-@assert mulstring_to_int("mul(11,5)") == 55
-
-extract_mulstrings(example)
+@assert mulstring_to_int("mul(11,8)") == 88
+@assert mulstring_to_int("mul(8,5)") == 40
 
 example_parsed = mulstring_to_int.(extract_mulstrings(example))
-example_parsed
 @assert example_parsed == example_numbers
-@assert sum(example_parsed) == sum(example_numbers)
 
 
 lines = readlines("data/day_3.txt")
