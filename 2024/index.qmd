@@ -30,7 +30,7 @@ print("Total distance of all coordinates: " * string(total))
 
 ```{julia}
 
-function check_report_safe(report)
+function check_report_safe(report::Vector{Int})
     change = diff(report)
     is_size_safe = Base.between.(abs.(change), 1, 3)
     is_dir_safe = diff(sign.(change)) .== 0
