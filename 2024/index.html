@@ -153,7 +153,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#day-1" id="toc-day-1" class="nav-link active" data-scroll-target="#day-1">Day 1</a></li>
   <li><a href="#day-2" id="toc-day-2" class="nav-link" data-scroll-target="#day-2">Day 2</a></li>
-  <li><a href="#day-3" id="toc-day-3" class="nav-link" data-scroll-target="#day-3">Day 3</a></li>
+  <li><a href="#day-3" id="toc-day-3" class="nav-link" data-scroll-target="#day-3">Day 3</a>
+  <ul class="collapse">
+  <li><a href="#part-1" id="toc-part-1" class="nav-link" data-scroll-target="#part-1">Part 1</a></li>
+  <li><a href="#part-2" id="toc-part-2" class="nav-link" data-scroll-target="#part-2">Part 2</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -251,6 +255,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="day-3" class="level2">
 <h2 class="anchored" data-anchor-id="day-3"><a href="https://adventofcode.com/2024/day/3">Day 3</a></h2>
+<p>Having spent a bunch of time learning regex a couple of years ago continues to always payoff, being able to just pattern match without having to look up what to use is always great.</p>
+<section id="part-1" class="level3">
+<h3 class="anchored" data-anchor-id="part-1">Part 1</h3>
 <div id="6" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>example <span class="op">=</span> <span class="st">"xmul(2,4)%&amp;mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"</span></span>
@@ -282,8 +289,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>Total sum of all mul calls: 185797128</code></pre>
 </div>
 </div>
+</section>
+<section id="part-2" class="level3">
+<h3 class="anchored" data-anchor-id="part-2">Part 2</h3>
+<p>This uses global values, which I’m not a fan of, but I couldn’t be bothered remaking it to work better with the global context</p>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>example <span class="op">=</span> <span class="st">"xmul(2,4)&amp;mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>example_numbers <span class="op">=</span> [<span class="fl">8</span>, <span class="fl">40</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">global</span> is_enabled <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">extract_conditional_mulstrings</span>(string)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> is_enabled</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    matches <span class="op">=</span> [m.match for m <span class="kw">in</span> <span class="fu">eachmatch</span>(<span class="st">r"</span><span class="ch">(</span><span class="st">mul</span><span class="sc">\(\d+</span><span class="st">,</span><span class="sc">\d+\)</span><span class="ch">|</span><span class="st">don't</span><span class="sc">\(\)</span><span class="ch">|</span><span class="st">do</span><span class="sc">\(\)</span><span class="ch">)</span><span class="st">"</span>, string)]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    enabled_matches <span class="op">=</span> <span class="dt">String</span>[]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> match <span class="kw">in</span> matches</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> match <span class="op">==</span> <span class="st">"don't()"</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>            is_enabled <span class="op">=</span> <span class="cn">false</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> match <span class="op">==</span> <span class="st">"do()"</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            is_enabled <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> !is_enabled</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(enabled_matches, match)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    enabled_matches</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fu">mulstring_to_int</span>.(<span class="fu">extract_conditional_mulstrings</span>(example)) <span class="op">==</span> example_numbers</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> <span class="fu">readlines</span>(<span class="st">"data/day_3.txt"</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>extracted_values <span class="op">=</span> [<span class="fu">mulstring_to_int</span>.(x) for x <span class="kw">in</span> <span class="fu">extract_conditional_mulstrings</span>.(lines)]</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> <span class="fu">sum</span>(<span class="fu">sum</span>.(extracted_values))</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Total sum of all mul calls: </span><span class="sc">$</span>total<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total sum of all mul calls: 89798695</code></pre>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
