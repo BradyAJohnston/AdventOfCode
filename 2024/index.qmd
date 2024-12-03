@@ -62,3 +62,39 @@ print("Total safe reports: $n_safe")
 
 
 ```
+
+## [Day 3](https://adventofcode.com/2024/day/3)
+
+```{julia}
+
+example = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
+example_numbers = [8, 25, 88, 40]
+
+
+function mulstring_to_int(mulstring)
+    return prod([parse(Int, x.match) for x in eachmatch(r"\d+", mulstring)])
+end
+
+function extract_mulstrings(line)
+    return [m.match for m in eachmatch(r"mul\(\d+,\d+\)", line)]
+end
+
+@assert mulstring_to_int("mul(10,3)") == 30
+@assert mulstring_to_int("mul(11,5)") == 55
+
+extract_mulstrings(example)
+
+example_parsed = mulstring_to_int.(extract_mulstrings(example))
+example_parsed
+@assert example_parsed == example_numbers
+@assert sum(example_parsed) == sum(example_numbers)
+
+
+lines = readlines("2024/data/day_3.txt")
+extracted_values = [mulstring_to_int.(x) for x in extract_mulstrings.(lines)]
+
+total = sum(sum.(extracted_values))
+
+print("Total sum of all mul calls: $total")
+
+```
