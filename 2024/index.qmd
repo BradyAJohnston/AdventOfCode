@@ -65,6 +65,9 @@ print("Total safe reports: $n_safe")
 
 ## [Day 3](https://adventofcode.com/2024/day/3)
 
+Having spent a bunch of time learning regex a couple of years ago continues to always payoff, being able to just pattern match without having to look up what to use is always great.
+
+### Part 1
 ```{julia}
 
 example = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
@@ -88,6 +91,48 @@ example_parsed = mulstring_to_int.(extract_mulstrings(example))
 
 lines = readlines("data/day_3.txt")
 extracted_values = [mulstring_to_int.(x) for x in extract_mulstrings.(lines)]
+
+total = sum(sum.(extracted_values))
+
+print("Total sum of all mul calls: $total")
+
+```
+
+### Part 2
+
+This uses global values, which I'm not a fan of, but I couldn't be bothered remaking it to work better with the global context
+
+```{julia}
+example = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
+example_numbers = [8, 40]
+
+global is_enabled = true
+
+function extract_conditional_mulstrings(string)
+    global is_enabled
+    matches = [m.match for m in eachmatch(r"(mul\(\d+,\d+\)|don't\(\)|do\(\))", string)]
+    enabled_matches = String[]
+    for match in matches
+        if match == "don't()"
+            is_enabled = false
+            continue
+        end
+        if match == "do()"
+            is_enabled = true
+            continue
+        end
+        if !is_enabled
+            continue
+        end
+        push!(enabled_matches, match)
+    end
+    enabled_matches
+end
+
+@assert mulstring_to_int.(extract_conditional_mulstrings(example)) == example_numbers
+
+lines = readlines("data/day_3.txt")
+extracted_values = [mulstring_to_int.(x) for x in extract_conditional_mulstrings.(lines)]
 
 total = sum(sum.(extracted_values))
 
