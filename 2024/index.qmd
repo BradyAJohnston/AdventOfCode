@@ -24,3 +24,41 @@ end
 
 print("Total distance of all coordinates: " * string(total))
 ```
+
+## [Day 2](https://adventofcode.com/2024/day/2)
+
+
+```{julia}
+
+function check_report_safe(report)
+    change = diff(report)
+    is_size_safe = Base.between.(abs.(change), 1, 3)
+    is_dir_safe = diff(sign.(change)) .== 0
+    return all(is_dir_safe) & all(is_size_safe)
+end
+
+examples = [
+    [7, 6, 4, 2, 1], 
+    [1, 2, 7, 8, 9], 
+    [9, 7, 6, 2, 1], 
+    [1, 3, 2, 4, 5], 
+    [8, 6, 4, 4, 1], 
+    [1, 3, 6, 7, 9]
+]
+
+answers = [true, false, false, false, false, true]
+
+
+@assert check_report_safe.(examples) == answers
+
+
+lines = readlines("data/day_2.txt")
+split_lines = [parse.(Int, split(line)) for line in lines]
+
+is_report_safe = check_report_safe.(split_lines)
+n_safe = sum(is_report_safe)
+
+print("Total safe reports: $n_safe")
+
+
+```
