@@ -322,7 +322,7 @@ for row in 1:(n_rows - 2)
     end
 end
 
-counter
+print("Number of X-MAS matched: $counter")
 
 ```
 
